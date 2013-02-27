@@ -46,6 +46,7 @@ when "suse"
     "%release%", node["openstack"]["release"].capitalize)
   repo_uri.gsub! "%suse-release%", zypp["release"]
 
+  # TODO(iartarisi) this should be moved to its own recipe
   bash "add repository key" do
     cwd "/tmp"
     code <<-EOH
@@ -54,6 +55,8 @@ when "suse"
       rpm --import cloud.asc
       rm -f cloud.asc
     EOH
+
+    not_if { `rpm -qa gpg-pubkey*`.include? zypp["repo-key"].downcase }
   end
 
   execute "add repository" do
