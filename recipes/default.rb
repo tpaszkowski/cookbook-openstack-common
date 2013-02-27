@@ -58,7 +58,6 @@ when "suse"
 
   execute "add repository" do
     command "zypper addrepo --check #{repo_uri} Cloud:OpenStack"
-    
-    not_if { /#{repo_uri}/.match `zypper repos --export -` }
+    not_if { `zypper repos --export -`.include? repo_uri }
   end
 end
