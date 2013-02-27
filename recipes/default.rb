@@ -17,8 +17,8 @@
 # limitations under the License.
 #
 
-if node["platform_family"] == "debian"
-
+case node["platform_family"]
+when "debian"
   package "ubuntu-cloud-keyring" do
     action :install
   end
@@ -40,4 +40,31 @@ if node["platform_family"] == "debian"
     components apt_components
   end
 
+when "suse"
+  zypp = node["openstack"]["zypp"]
+  repo_uri = zypp["uri"].gsub(
+    "%release%", node["openstack"]["release"].capitalize)
+  repo_uri.gsub! "%suse-release%", zypp["release"]
+
+  bash "add repository key" do
+    cwd "/tmp"
+    code <<-EOH
+      gpg --keyserver pgp.mit.edu --recv-keys #{zypp["repo-key"]}
+      gpg --armor --export #{zypp["repo-key"]} > cloud.asc
+      rpm --import cloud.asc
+      rm -f cloud.asc
+    EOH
+  end
+
+  execute "add repository" do
+    command "zypper addrepo --check #{repo_uri} Cloud:OpenStack"
+    
+    not_if { /#{repo_uri}/.match `zypper repos --export -` }
+  end
+
+  zypp["patterns"].each do |pkg|
+    package pkg do
+      action :install
+    end
+  end
 end
