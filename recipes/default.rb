@@ -61,10 +61,4 @@ when "suse"
     
     not_if { /#{repo_uri}/.match `zypper repos --export -` }
   end
-
-  zypp["patterns"].each do |pkg|
-    package pkg do
-      action :install
-    end
-  end
 end

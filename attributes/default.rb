@@ -77,8 +77,6 @@ default["openstack"]["apt"]["components"] = [ "precise-updates/folsom", "main" ]
 default["openstack"]["zypp"]["release"] = "SLE_11_SP2"
 default["openstack"]["zypp"]["repo-key"] = "95140AF605F4861F"
 default["openstack"]["zypp"]["uri"] = "http://download.opensuse.org/repositories/Cloud:/OpenStack:/%release%/%suse-release%/"
-default["openstack"]["zypp"]["patterns"] = ["patterns-OpenStack-controller",
-                                            "patterns-OpenStack-compute-node"]
 
 #TODO(jaypipes): Do RHEL/Fedora platform family YUM setup
 
