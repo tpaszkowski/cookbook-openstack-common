@@ -41,10 +41,16 @@ when "debian"
   end
 
 when "suse"
+  if node["lsb"]["description"][/^SUSE Linux Enterprise Server/]
+    zypp_release = "SLE_" + node["lsb"]["release"] + "_SP" + node["lsb"]["patchlevel"]
+  elsif node["lsb"]["description"][/^openSUSE/]
+    zypp_release = "openSUSE_" + node["lsb"]["release"]
+  end
   zypp = node["openstack"]["zypp"]
   repo_uri = zypp["uri"].gsub(
     "%release%", node["openstack"]["release"].capitalize)
-  repo_uri.gsub! "%suse-release%", zypp["release"]
+  repo_uri.gsub! "%suse-release%", zypp_release
+  repo_alias = "Cloud:OpenStack:" + node["openstack"]["release"].capitalize
 
   # TODO(iartarisi) this should be moved to its own recipe
   bash "add repository key" do
@@ -60,7 +66,7 @@ when "suse"
   end
 
   execute "add repository" do
-    command "zypper addrepo --check #{repo_uri} Cloud:OpenStack"
+    command "zypper addrepo --check #{repo_uri} #{repo_alias}"
     not_if { `zypper repos --export -`.include? repo_uri }
   end
 end
