@@ -42,7 +42,8 @@ when "debian"
 
 when "suse"
   if node["lsb"]["description"][/^SUSE Linux Enterprise Server/]
-    zypp_release = "SLE_" + node["lsb"]["release"] + "_SP" + node["lsb"]["patchlevel"]
+    sle_release = node["platform_version"].split(".")
+    zypp_release = "SLE_" + sle_release[0] + "_SP" + sle_release[1]
   elsif node["lsb"]["description"][/^openSUSE/]
     zypp_release = "openSUSE_" + node["lsb"]["release"]
   end
