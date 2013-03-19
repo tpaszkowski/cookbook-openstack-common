@@ -41,6 +41,24 @@ when "debian"
   end
 
 when "suse"
+  if node["lsb"]["description"].nil?
+  # Workaroun for SLE11
+  # 
+  # On SLE11 ohai is broken and preferes lsb-release. We need to
+  # install it to be able to detect if recipie is run on openSUSE or SLES.
+  #
+  # https://bugzilla.novell.com/show_bug.cgi?id=809129
+  #
+  #
+    install_lsb_release = package "lsb-release" do
+      action :nothing
+    end
+    reload_ohai = ohai "reload_lsb" do
+      action :nothing
+    end
+    install_lsb_release.run_action(:install)
+    reload_ohai.run_action(:reload)
+  end
   if node["lsb"]["description"][/^SUSE Linux Enterprise Server/]
     zypp_release = "SLE_" + node["lsb"]["release"] + "_SP" + node["lsb"]["patchlevel"]
   elsif node["lsb"]["description"][/^openSUSE/]
