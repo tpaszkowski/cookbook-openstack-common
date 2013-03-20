@@ -177,6 +177,14 @@ default['openstack']['endpoints']['image-registry']['scheme'] = "https"
 default['openstack']['endpoints']['image-registry']['port'] = "9191"
 default['openstack']['endpoints']['image-registry']['path'] = "/v2"
 
+# ******************** OpenStack Quantum Endpoints *****************************
+
+# The OpenStack Quantum Server API endpoint
+default['openstack']['endpoints']['quantum']['host'] = "127.0.0.1"
+default['openstack']['endpoints']['quantum']['scheme'] = "https"
+default['openstack']['endpoints']['quantum']['port'] = "9696"
+default['openstack']['endpoints']['quantum']['path'] = "/"
+
 # ******************** OpenStack Volume Endpoints *****************************
 
 # The OpenStack Volume (Cinder) API endpoint
@@ -290,6 +298,12 @@ default['openstack']['db']['metering']['db_type'] = "mysql"
 default['openstack']['db']['metering']['host'] = "127.0.0.1"
 default['openstack']['db']['metering']['port'] = "3306"
 default['openstack']['db']['metering']['db_name'] = "ceilometer"
+
+# Database used by OpenStack Metering (Ceilometer)
+default['openstack']['db']['quantum']['db_type'] = "mysql"
+default['openstack']['db']['quantum']['host'] = "127.0.0.1"
+default['openstack']['db']['quantum']['port'] = "3306"
+default['openstack']['db']['quantum']['db_name'] = "quantum"
 
 # Switch to store the MySQL root password in a databag instead of
 # using the generated OpenSSL cookbook secure_password one.
